@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.1
-# Copyright 2025 <<Insert your name here>>
+# Copyright 2025 Louis Lam
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -33,7 +33,7 @@
 """
 CMPUT 331 Assignment 8 Problem 3 Student Solution
 March 2025
-Author: <Your name here>
+Author: Louis Lam
 """
 
 from a8p2 import hackVigenere
@@ -42,7 +42,19 @@ from sys import flags
 
 
 def crackPassword(encrypted_file="password_protected.txt", output_file="plaintext.txt"):
-    raise NotImplementedError()
+    # read ciphertext
+    with open(encrypted_file, 'r') as f:
+        ciphertext = f.read()
+
+    # find key
+    key = hackVigenere(ciphertext)
+
+    # decrypt
+    plaintext = decryptVigenere(ciphertext, key)
+
+    # write result
+    with open(output_file, 'w') as f:
+        f.write(plaintext)
 
 def test():
     crackPassword()
