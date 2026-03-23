@@ -4,7 +4,7 @@
 #
 # CMPUT 331 Student Submission License
 # Version 1.1
-# Copyright 2025 <<Insert your name here>>
+# Copyright 2025 Louis Lam
 #
 # Redistribution is forbidden in all circumstances. Use of this software
 # without explicit authorization from the author is prohibited.
@@ -32,7 +32,7 @@
 """
 CMPUT 331 Assignment 8 Problem 1 Student Solution
 March 2025
-Author: <Your name here>
+Author: Louis Lam
 """
 
 
