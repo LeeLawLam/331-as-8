@@ -42,7 +42,19 @@ from sys import flags
 
 
 def crackPassword(encrypted_file="password_protected.txt", output_file="plaintext.txt"):
-    raise NotImplementedError()
+    # read ciphertext
+    with open(encrypted_file, 'r') as f:
+        ciphertext = f.read()
+
+    # find key
+    key = hackVigenere(ciphertext)
+
+    # decrypt
+    plaintext = decryptVigenere(ciphertext, key)
+
+    # write result
+    with open(output_file, 'w') as f:
+        f.write(plaintext)
 
 def test():
     crackPassword()

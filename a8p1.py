@@ -56,6 +56,20 @@ def getLetterFrequency(message: str):
                    'Q': 0, 'R': 0, 'S': 0, 'T': 0, 'U': 0, 'V': 0, 'W': 0, 'X': 0, 
                    'Y': 0, 'Z': 0}
 
+    message = message.upper()
+    total = 0
+
+    for ch in message:
+        if ch in LETTERS:
+            letterCount[ch] += 1
+            total += 1
+
+    if total == 0:
+        return letterCount
+
+    for ch in LETTERS:
+        letterCount[ch] /= total
+
     return letterCount
 
 def getSubsequences(ciphertext: str, keylen: int):
@@ -63,18 +77,53 @@ def getSubsequences(ciphertext: str, keylen: int):
     # This function will return list of lists containing the characters in each subsequence
     subsequences = []
 
+    for i in range(keylen):
+        subsequence = []
+        for j in range(i, len(ciphertext), keylen):
+            subsequence.append(ciphertext[j])
+        subsequences.append(subsequence)
+
     return subsequences
 
 def calculateTopIMC(subsequence: str):
     # Given a string, this function will calculate and return a list containing all 26 keys and their IMC values
     # Return a list of tuples containing key, IMC pairs from largest IMC to smallest
-    pass
+    scores = []
+
+    if isinstance(subsequence, list):
+        subsequence = ''.join(subsequence)
+
+    for key in LETTERS:
+        decrypted = decryptVigenere(subsequence, key)
+        freq = getLetterFrequency(decrypted)
+
+        imc = 0
+        for ch in LETTERS:
+            imc += freq[ch] * ENG_LETT_FREQ[ch]
+
+        scores.append((key, imc))
+
+    scores.sort(key=lambda x: x[1], reverse=True)
+    return scores
 
 def decryptVigenere(ciphertext: str, key: str):
     # This function takes in a vigenere ciphertext and its key as the parameters
     # The decrypted message will be returned
     
     decryption = ''
+    key = key.upper()
+    keyIndex = 0
+
+    for ch in ciphertext:
+        if ch.upper() in LETTERS:
+            cnum = LETTERS.find(ch.upper())
+            knum = LETTERS.find(key[keyIndex % len(key)])
+            pnum = (cnum - knum) % 26
+            decryption += LETTERS[pnum]
+            keyIndex += 1
+        else:
+            decryption += ch
+
     return decryption
 
 def vigenereKeySolver(ciphertext: str, keylength: int):
@@ -85,7 +134,32 @@ def vigenereKeySolver(ciphertext: str, keylength: int):
     ciphertext = re.compile('[^A-Z]').sub('',ciphertext.upper())
 
 
-    raise NotImplementedError()
+    subsequences = getSubsequences(ciphertext, keylength)
+
+    topLetters = []
+    for subsequence in subsequences:
+        imcList = calculateTopIMC(subsequence)
+        topLetters.append(imcList[:3])
+
+    allKeys = []
+
+    for combo in itertools.product(*topLetters):
+        key = ''
+        totalIMC = 0
+
+        for letter, imc in combo:
+            key += letter
+            totalIMC += imc
+
+        allKeys.append((key, totalIMC))
+
+    allKeys.sort(key=lambda x: x[1], reverse=True)
+
+    bestKeys = []
+    for key, score in allKeys[:5]:
+        bestKeys.append(key)
+
+    return bestKeys
 
 def test():
 

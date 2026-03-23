@@ -43,7 +43,25 @@ def hackVigenere(ciphertext: str):
     """
     return a string containing the key to the cipher
     """
-    raise NotImplementedError()
+    bestKey = ''
+    bestScore = -1
+
+    for keylen in range(1, 11):
+        keys = vigenereKeySolver(ciphertext, keylen)
+        key = keys[0]
+
+        plaintext = decryptVigenere(ciphertext, key)
+
+        score = 0
+        for ch in plaintext:
+            if ch in "ETAOIN":
+                score += 1
+
+        if score > bestScore:
+            bestScore = score
+            bestKey = key
+
+    return bestKey
 
 def test():
     # hackVigenere Tests
